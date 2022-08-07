@@ -1,22 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:shop/providers/products_provider.dart';
-import 'package:shop/shared/dummy_products.dart';
 import 'package:shop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 
-import '../models/product.dart';
+enum FilterOptions {
+  Favorites,
+  All,
+}
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<ProductsProvider>(context);
-    final productList = productsProvider.items;
+    final productList = productsProvider.isFavorite
+        ? productsProvider.favItems
+        : productsProvider.items;
     return Scaffold(
       appBar: AppBar(
         title: const Text('MyShop'),
+        actions: [
+          PopupMenuButton(
+            onSelected: (selectedValue) {
+              if (selectedValue == FilterOptions.Favorites) {
+                productsProvider.toggleHomeFilter(fav: true);
+              } else {
+                productsProvider.toggleHomeFilter(fav: false);
+              }
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: FilterOptions.Favorites,
+                child: Text("Only Favorites"),
+              ),
+              const PopupMenuItem(
+                value: FilterOptions.All,
+                child: Text("Show All"),
+              )
+            ],
+            icon: const Icon(Icons.filter_list_outlined),
+          ),
+        ],
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(10.0),
@@ -26,10 +51,9 @@ class HomeScreen extends StatelessWidget {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10),
         itemBuilder: (ctx, i) {
-          return ProductItem(
-            id: productList[i].id,
-            title: productList[i].title,
-            imageUrl: productList[i].imageUrl,
+          return ChangeNotifierProvider.value(
+            value: productList[i],
+            child: const ProductItem(),
           );
         },
         itemCount: productList.length,

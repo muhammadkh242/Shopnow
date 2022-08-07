@@ -17,15 +17,17 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (ctx) => ProductsProvider(),
       child: MaterialApp(
+
         title: 'Shop',
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.grey[250],
           colorScheme: Theme.of(context).colorScheme.copyWith(
                 primary: Colors.deepOrangeAccent,
                 secondary: Colors.blueGrey,
               ),
           fontFamily: 'Lato',
         ),
-        home: const HomeScreen(),
+        home: HomeScreen(),
         routes: {
           ProductDetailsScreen.routeName : (ctx) => const ProductDetailsScreen()
         },

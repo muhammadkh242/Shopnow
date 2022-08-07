@@ -1,4 +1,4 @@
-import '../models/product.dart';
+import '../providers/product.dart';
 
 List<Product> getProducts() {
   return [
