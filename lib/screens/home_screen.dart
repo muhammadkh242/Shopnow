@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/products_provider.dart';
 import 'package:shop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,30 @@ class HomeScreen extends StatelessWidget {
             ],
             icon: const Icon(Icons.filter_list_outlined),
           ),
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.shopping_cart),
+              ),
+              CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                radius: 12,
+                child: Consumer<Cart>(
+                  builder: (ctx, cartProvider, _){
+                    return Text(
+                      cartProvider.itemsCount.toString(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
         ],
       ),
       body: GridView.builder(
