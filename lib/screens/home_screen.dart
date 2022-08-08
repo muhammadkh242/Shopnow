@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/products_provider.dart';
+import 'package:shop/screens/cart_screen.dart';
 import 'package:shop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +47,9 @@ class HomeScreen extends StatelessWidget {
             alignment: Alignment.topRight,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, CartScreen.routeName);
+                },
                 icon: const Icon(Icons.shopping_cart),
               ),
               CircleAvatar(
