@@ -16,9 +16,12 @@ class OrdersScreen extends StatelessWidget {
         title: const Text("Orders"),
       ),
       drawer: const AppDrawer(),
-      body: ListView.builder(
-        itemCount: ordersProvider.orders.length,
-        itemBuilder: (ctx, i) => OrderRowItem(orderItem: ordersProvider.orders[i],),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: ListView.builder(
+          itemCount: ordersProvider.orders.length,
+          itemBuilder: (ctx, i) => OrderRowItem(orderItem: ordersProvider.orders[i],),
+        ),
       ),
     );
   }
