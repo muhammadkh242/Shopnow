@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:shop/widgets/cart_item.dart';
 
+import '../providers/order.dart';
+
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
   static const routeName = '/cart';
@@ -10,6 +12,8 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
+    final ordersData = Provider.of<Orders>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shopping Cart"),
@@ -55,7 +59,13 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  ordersData.addOrder(
+                    cartProducts: cartData.items.values.toList(),
+                    amount: cartData.totalAmount,
+                  );
+                  cartData.clear();
+                },
                 child: const Text(
                   "Order Now",
                   style: TextStyle(

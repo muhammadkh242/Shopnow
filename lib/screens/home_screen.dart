@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/products_provider.dart';
 import 'package:shop/screens/cart_screen.dart';
+import 'package:shop/widgets/app_drawer.dart';
 import 'package:shop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
         ? productsProvider.favItems
         : productsProvider.items;
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text('MyShop'),
         actions: [
