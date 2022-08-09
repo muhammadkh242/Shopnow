@@ -23,14 +23,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: ProductsProvider(),
+        ChangeNotifierProvider(
+          create: (ctx) => ProductsProvider(),
         ),
-        ChangeNotifierProvider.value(
-          value: Cart(),
+        ChangeNotifierProvider(
+          create: (ctx)=> Cart(),
         ),
-        ChangeNotifierProvider.value(
-          value: Orders(),
+        ChangeNotifierProvider(
+          create: (ctx) =>Orders(),
         ),
       ],
       child: MaterialApp(
@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey[250],
           colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: Colors.deepOrangeAccent,
-                secondary: Colors.blueGrey,
+                primary: Colors.blueGrey,
+                secondary: Colors.deepOrangeAccent,
               ),
           fontFamily: 'Lato',
         ),
