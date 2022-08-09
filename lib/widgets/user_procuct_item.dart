@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/providers/products_provider.dart';
 
 class UserProductItem extends StatelessWidget {
-  const UserProductItem({Key? key, required this.imageUrl, required this.title})
+  const UserProductItem(
+      {Key? key, required this.imageUrl, required this.title, required this.id})
       : super(key: key);
-
+  final String id;
   final String imageUrl;
   final String title;
 
@@ -65,9 +68,7 @@ class UserProductItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.edit,
                     color: Colors.blue,
@@ -76,7 +77,34 @@ class UserProductItem extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-
+                    showDialog(
+                      context: context,
+                      builder: (ctx) {
+                        return AlertDialog(
+                          title: const Text('Are you sure?'),
+                          content: const Text(
+                            "Do you want to remove the item from the products?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Provider.of<ProductsProvider>(context,
+                                        listen: false)
+                                    .removeProduct(id);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   icon: const Icon(
                     Icons.delete,

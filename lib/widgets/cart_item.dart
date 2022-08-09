@@ -38,7 +38,6 @@ class CartRowItem extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        print("ondismiss");
         Provider.of<Cart>(context, listen: false)
             .removeItem(productId: productId);
       },
