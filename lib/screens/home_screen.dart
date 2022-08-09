@@ -5,14 +5,26 @@ import 'package:shop/screens/cart_screen.dart';
 import 'package:shop/widgets/app_drawer.dart';
 import 'package:shop/widgets/product_item.dart';
 import 'package:provider/provider.dart';
+import 'package:conditional_builder/conditional_builder.dart';
 
 enum FilterOptions {
   Favorites,
   All,
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 radius: 12,
                 child: Consumer<Cart>(
-                  builder: (ctx, cartProvider, _){
+                  builder: (ctx, cartProvider, _) {
                     return Text(
                       cartProvider.itemsCount.toString(),
                       style: const TextStyle(
@@ -73,20 +85,26 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
-        itemBuilder: (ctx, i) {
-          return ChangeNotifierProvider.value(
-            value: productList[i],
-            child: const ProductItem(),
-          );
-        },
-        itemCount: productList.length,
+      body: ConditionalBuilder(
+        condition: productsProvider.items.isNotEmpty,
+        builder: (context) => GridView.builder(
+          padding: const EdgeInsets.all(10.0),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10),
+          itemBuilder: (ctx, i) {
+            return ChangeNotifierProvider.value(
+              value: productList[i],
+              child: const ProductItem(),
+            );
+          },
+          itemCount: productList.length,
+        ),
+        fallback: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }

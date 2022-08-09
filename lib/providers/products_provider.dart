@@ -5,7 +5,9 @@ import 'product.dart';
 import 'dart:convert';
 
 class ProductsProvider with ChangeNotifier {
-  final List<Product> _items = getProducts();
+  final List<Product> _items = [];
+  static const url =
+      "https://shop-b55ab-default-rtdb.firebaseio.com/products.json";
 
   List<Product> get items {
     return [..._items];
@@ -27,7 +29,6 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future addProduct(Product product) async {
-    const url = "https://shop-b55ab-default-rtdb.firebaseio.com/products.json";
     var uri = Uri.parse(url);
     await http
         .post(
@@ -54,6 +55,26 @@ class ProductsProvider with ChangeNotifier {
       throw err;
     });
     return Future.value;
+  }
+
+  Future fetchProducts() async {
+    var uri = Uri.parse(url);
+    final response = await http.get(uri);
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    jsonResponse.forEach((productID, product) {
+      _items.add(
+        Product(
+          id: productID,
+          title: product['title'],
+          description: product['description'],
+          price: product['price'],
+          imageUrl: product['imageUrl'],
+        ),
+      );
+    });
+    print(_items.length);
+    notifyListeners();
   }
 
   void removeProduct(String id) {
