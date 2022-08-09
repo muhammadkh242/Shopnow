@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/products_provider.dart';
+import 'package:shop/screens/edit_product_screen.dart';
 
 class UserProductItem extends StatelessWidget {
   const UserProductItem(
@@ -68,7 +69,10 @@ class UserProductItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, EditProductScreen.routeName,
+                        arguments: id);
+                  },
                   icon: const Icon(
                     Icons.edit,
                     color: Colors.blue,

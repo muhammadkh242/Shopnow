@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:shop/providers/product.dart';
 import 'package:provider/provider.dart';
@@ -10,13 +11,16 @@ class EditProductScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final shoeImage =
       "https://st-adidas-egy.mncdn.com/content/images/thumbs/0117567_grand-court-shoes_ef0103_side-lateral-center-view.jpeg";
+  var currentImage = "";
   TextEditingController titleController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  var _isUpdate = false;
+
   void _saveProductInfo(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      final editedProduct = Product(
+      final additionalProduct = Product(
         id: DateTime.now().toString(),
         title: titleController.text,
         description: descriptionController.text,
@@ -24,13 +28,43 @@ class EditProductScreen extends StatelessWidget {
         imageUrl: shoeImage,
       );
 
-      Provider.of<ProductsProvider>(context, listen: false).addProduct(editedProduct);
+      Provider.of<ProductsProvider>(context, listen: false)
+          .addProduct(additionalProduct);
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _updateProductInfo(BuildContext context, String id) {
+    if (_formKey.currentState!.validate()) {
+      final updatedProduct = Product(
+        id: id,
+        title: titleController.text,
+        description: descriptionController.text,
+        price: double.parse(priceController.text),
+        imageUrl: currentImage,
+      );
+
+      Provider.of<ProductsProvider>(context, listen: false).updateProduct(updatedProduct);
       Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final arg = ModalRoute.of(context)?.settings.arguments as String;
+    if (arg != UserProductsScreen.routeName) {
+      _isUpdate = true;
+    }
+
+    if(_isUpdate){
+      final currentProduct = Provider.of<ProductsProvider>(context, listen: false).findProductById(arg);
+      titleController.text = currentProduct.title;
+      priceController.text = currentProduct.price.toString();
+      descriptionController.text = currentProduct.description;
+      currentImage = currentProduct.imageUrl;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Product"),
@@ -42,8 +76,12 @@ class EditProductScreen extends StatelessWidget {
                 Icons.check_circle_sharp,
                 size: 30,
               ),
-              onPressed: (){
-                _saveProductInfo(context);
+              onPressed: () {
+                if(_isUpdate){
+                  _updateProductInfo(context, arg);
+                }else{
+                  _saveProductInfo(context);
+                }
               },
             ),
           ),
@@ -57,7 +95,7 @@ class EditProductScreen extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                 child: Image(
-                  image: NetworkImage(shoeImage),
+                  image: NetworkImage(_isUpdate ? currentImage : shoeImage),
                   fit: BoxFit.cover,
                 ),
               ),
