@@ -26,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  Future _refreshItems(BuildContext context) async{
+    await Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<ProductsProvider>(context);
@@ -87,20 +91,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: ConditionalBuilder(
         condition: productsProvider.items.isNotEmpty,
-        builder: (context) => GridView.builder(
-          padding: const EdgeInsets.all(10.0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10),
-          itemBuilder: (ctx, i) {
-            return ChangeNotifierProvider.value(
-              value: productList[i],
-              child: const ProductItem(),
-            );
-          },
-          itemCount: productList.length,
+        builder: (context) => RefreshIndicator(
+          onRefresh: () => _refreshItems(context) ,
+          child: GridView.builder(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(10.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10),
+            itemBuilder: (ctx, i) {
+              return ChangeNotifierProvider.value(
+                value: productList[i],
+                child: const ProductItem(),
+              );
+            },
+            itemCount: productList.length,
+          ),
         ),
         fallback: (context) => const Center(
           child: CircularProgressIndicator(),

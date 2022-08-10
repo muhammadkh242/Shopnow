@@ -14,8 +14,8 @@ class UserProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5.0,
-      margin: const EdgeInsets.all(8.0),
+      elevation: 3.0,
+      margin: const EdgeInsets.all(14.0),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
       child: Column(

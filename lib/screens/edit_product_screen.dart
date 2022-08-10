@@ -78,7 +78,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           });
           Navigator.of(context).pop();
         },
-      ).catchError((err){
+      ).catchError((err) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -92,6 +92,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _updateProductInfo(BuildContext context, String id) {
+    setState(() {
+      _isLoading = true;
+    });
     if (_formKey.currentState!.validate()) {
       final updatedProduct = Product(
         id: id,
@@ -102,8 +105,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
       );
 
       Provider.of<ProductsProvider>(context, listen: false)
-          .updateProduct(updatedProduct);
-      Navigator.of(context).pop();
+          .updateProduct(updatedProduct)
+          .then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }).catchError((error) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Update Failed, check your connection and try again!"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      });
+      //Navigator.of(context).pop();
     }
   }
 
