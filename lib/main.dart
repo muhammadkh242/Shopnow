@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/order.dart';
 import 'package:shop/providers/products_provider.dart';
+import 'package:shop/screens/auth_screen.dart';
 import 'package:shop/screens/cart_screen.dart';
 import 'package:shop/screens/edit_product_screen.dart';
 import 'package:shop/screens/home_screen.dart';
@@ -44,9 +45,8 @@ class MyApp extends StatelessWidget {
               ),
           fontFamily: 'Lato',
         ),
-        //home: HomeScreen(),
         routes: {
-          '/': (ctx) => HomeScreen(),
+          '/': (ctx) => const AuthScreen(),
           ProductDetailsScreen.routeName: (ctx) => const ProductDetailsScreen(),
           CartScreen.routeName: (ctx) => const CartScreen(),
           OrdersScreen.routeName: (ctx) => const OrdersScreen(),
