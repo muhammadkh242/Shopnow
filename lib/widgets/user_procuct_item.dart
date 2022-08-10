@@ -97,18 +97,32 @@ class UserProductItem extends StatelessWidget {
                               child: const Text("No"),
                             ),
                             TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Provider.of<ProductsProvider>(context,
+                              onPressed: () async {
+                                await Provider.of<ProductsProvider>(context,
                                         listen: false)
-                                    .removeProduct(id);
+                                    .removeProduct(id)
+                                    .then((value) {
+                                  Navigator.of(context).pop();
+                                }).catchError((err) {
+                                  Navigator.of(context).pop(false);
+                                });
                               },
                               child: const Text("Yes"),
                             ),
                           ],
                         );
                       },
-                    );
+                    ).then((value) {
+                      if (value == false) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                "Delete Failed, check your connection and try again!"),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
+                    });
                   },
                   icon: const Icon(
                     Icons.delete,

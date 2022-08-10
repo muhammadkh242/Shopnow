@@ -76,12 +76,21 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
-    notifyListeners();
-
+  Future removeProduct(String id) async {
     final url =
         'https://shop-b55ab-default-rtdb.firebaseio.com/products/$id.json';
+    var uri = Uri.parse(url);
+
+    await http.delete(uri).then((response) {
+      if (response.statusCode == 200) {
+        _items.removeWhere((product) => product.id == id);
+        notifyListeners();
+      }else{
+        throw Future.error;
+      }
+    }).catchError((error) {
+      throw error;
+    });
   }
 
   Future updateProduct(Product updatedProduct) async {
