@@ -60,18 +60,60 @@ class CartScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  //.......... add order remotely..............
-                  if (cartData.items.isNotEmpty) {
-                    ordersData
+              OrderButton(cartData: cartData, ordersData: ordersData)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cartData,
+    required this.ordersData,
+  }) : super(key: key);
+
+  final Cart cartData;
+  final Orders ordersData;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: CircularProgressIndicator(),
+        )
+        : TextButton(
+            onPressed: (widget.cartData.items.isEmpty || _isLoading)
+                ? null
+                : () {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    widget.ordersData
                         .addOrder(
-                      cartProducts: cartData.items.values.toList(),
-                      amount: cartData.totalAmount,
+                      cartProducts: widget.cartData.items.values.toList(),
+                      amount: widget.cartData.totalAmount,
                     )
                         .then((value) {
-                      cartData.clear();
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      widget.cartData.clear();
                     }).catchError((error) {
+                      setState(() {
+                        _isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -80,27 +122,14 @@ class CartScreen extends StatelessWidget {
                         ),
                       );
                     });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Shopping cart is empty!"),
-                        duration: Duration(seconds: 3),
-                      ),
-                    );
-                  }
-                },
-                child: const Text(
-                  "Order Now",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                  },
+            child: const Text(
+              "Order Now",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
   }
 }

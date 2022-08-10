@@ -72,7 +72,9 @@ class Orders with ChangeNotifier {
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-
+    if(jsonResponse == null){
+      return;
+    }
     jsonResponse.forEach((orderId, orderItem) {
       _orders.add(
         OrderItem(
@@ -90,8 +92,7 @@ class Orders with ChangeNotifier {
         ),
       );
     });
+    _orders.reversed;
     notifyListeners();
-
-    print(_orders.length);
   }
 }
