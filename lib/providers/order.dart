@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop/providers/cart.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OrderItem {
   final String id;
@@ -22,20 +24,45 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder({
+  Future addOrder({
     required List<CartItem> cartProducts,
     required double amount,
-  }) {
-    _orders.insert(
-      0,
-      OrderItem(
-        id: DateTime.now().toString(),
-        amount: amount,
-        products: cartProducts,
-        dateTime: DateTime.now(),
-      ),
-    );
-    print("orders count ${_orders.length}");
-    notifyListeners();
+  }) async {
+    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json";
+    var uri = Uri.parse(url);
+    await http
+        .post(
+      uri,
+      body: json.encode({
+        'products': cartProducts.map((cartProduct) {
+          return {
+            'id': cartProduct.id,
+            'title': cartProduct.title,
+            'quantity': cartProduct.quantity,
+            'price': cartProduct.price,
+          };
+        }).toList(),
+        'dateTime': DateTime.now().toString(),
+        'amount': amount,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        _orders.insert(
+          0,
+          OrderItem(
+            id: json.decode(response.body)["name"],
+            amount: amount,
+            products: cartProducts,
+            dateTime: DateTime.now(),
+          ),
+        );
+        notifyListeners();
+      } else {
+        throw Future.error;
+      }
+    }).catchError((error) {
+      throw Future.error;
+    });
   }
 }

@@ -62,11 +62,32 @@ class CartScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  ordersData.addOrder(
-                    cartProducts: cartData.items.values.toList(),
-                    amount: cartData.totalAmount,
-                  );
-                  cartData.clear();
+                  //.......... add order remotely..............
+                  if (cartData.items.isNotEmpty) {
+                    ordersData
+                        .addOrder(
+                      cartProducts: cartData.items.values.toList(),
+                      amount: cartData.totalAmount,
+                    )
+                        .then((value) {
+                      cartData.clear();
+                    }).catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              "Failed please check your connection and try again!"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Shopping cart is empty!"),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                  }
                 },
                 child: const Text(
                   "Order Now",
