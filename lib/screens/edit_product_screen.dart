@@ -30,23 +30,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   var _isUpdate = false;
   var _isLoading = false;
-
+  var _isInit = true;
   @override
   void didChangeDependencies() {
-    final arg = ModalRoute.of(context)?.settings.arguments as String;
-    if (arg != UserProductsScreen.routeName) {
-      _isUpdate = true;
+    if(_isInit){
+      final arg = ModalRoute.of(context)?.settings.arguments as String;
+      if (arg != UserProductsScreen.routeName) {
+        _isUpdate = true;
+      }
+      if (_isUpdate) {
+        final currentProduct =
+        Provider.of<ProductsProvider>(context, listen: false)
+            .findProductById(arg);
+        titleController.text = currentProduct.title;
+        priceController.text = currentProduct.price.toString();
+        descriptionController.text = currentProduct.description;
+        currentImage = currentProduct.imageUrl;
+        currentID = currentProduct.id;
+      }
+      _isInit = false;
     }
-    if (_isUpdate) {
-      final currentProduct =
-          Provider.of<ProductsProvider>(context, listen: false)
-              .findProductById(arg);
-      titleController.text = currentProduct.title;
-      priceController.text = currentProduct.price.toString();
-      descriptionController.text = currentProduct.description;
-      currentImage = currentProduct.imageUrl;
-      currentID = currentProduct.id;
-    }
+
     super.didChangeDependencies();
   }
 
