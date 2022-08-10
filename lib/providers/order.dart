@@ -21,7 +21,7 @@ class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
-    return [..._orders];
+    return _orders;
   }
 
   Future addOrder({
@@ -64,5 +64,34 @@ class Orders with ChangeNotifier {
     }).catchError((error) {
       throw Future.error;
     });
+  }
+
+  Future fetchOrders() async {
+    _orders.clear();
+    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json";
+    var uri = Uri.parse(url);
+    final response = await http.get(uri);
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    jsonResponse.forEach((orderId, orderItem) {
+      _orders.add(
+        OrderItem(
+          id: orderId,
+          amount: orderItem['amount'],
+          products: (orderItem['products'] as List<dynamic>).map((item) {
+            return CartItem(
+              id: item['id'],
+              title: item['title'],
+              quantity: item['quantity'],
+              price: item['price'],
+            );
+          }).toList(),
+          dateTime: DateTime.parse(orderItem['dateTime']),
+        ),
+      );
+    });
+    notifyListeners();
+
+    print(_orders.length);
   }
 }
