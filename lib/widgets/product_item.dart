@@ -37,8 +37,9 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
+            splashColor: Theme.of(context).colorScheme.secondary,
             color: Theme.of(context).colorScheme.secondary,
-            icon: const Icon(Icons.shopping_cart_outlined),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               cartProvider.addItem(
                 id: product.id,

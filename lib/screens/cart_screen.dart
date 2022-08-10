@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/cart.dart';
+import 'package:shop/widgets/app_drawer.dart';
 import 'package:shop/widgets/cart_item.dart';
 
 import '../providers/order.dart';
@@ -15,6 +16,7 @@ class CartScreen extends StatelessWidget {
     final ordersData = Provider.of<Orders>(context);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text("Shopping Cart"),
       ),
