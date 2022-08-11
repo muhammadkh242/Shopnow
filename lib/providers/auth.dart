@@ -1,42 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
-
-  Future signUp(String email, String password) async {
+  Future _authenticate(String email, String password, String urlSegment) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDa0wMGJ_NIUkIwKezZpnUdDz7-2APNN0o';
+        'https://identitytoolkit.googleapis.com/v1/$urlSegment?key=AIzaSyDa0wMGJ_NIUkIwKezZpnUdDz7-2APNN0o';
     final uri = Uri.parse(url);
-    final response = await http.post(
+    await http
+        .post(
       uri,
       body: json.encode(
-        {
-          'email': email,
-          'password': password,
-          'returnSecureToken': true,
-        },
+        {'email': email, 'password': password, 'returnSecureToken': true},
       ),
-    );
-    print(response.statusCode);
-    print(response.body);
+    )
+        .then((response) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+    }).catchError((error) {
+      throw error;
+    });
   }
 
-  Future login(String email, String password) async {
-    final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDa0wMGJ_NIUkIwKezZpnUdDz7-2APNN0o';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: json.encode(
-        {
-          'email': email,
-          'password': password,
-          'returnSecureToken': true,
-        },
-      ),
-    );
-    print(response.statusCode);
-    print(response.body);
-  }
+  Future signUp(String email, String password) async =>
+      _authenticate(email, password, "accounts:signUp");
+
+  Future login(String email, String password) async =>
+      _authenticate(email, password, "accounts:signInWithPassword");
 }
