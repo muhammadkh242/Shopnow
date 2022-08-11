@@ -24,40 +24,48 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => ProductsProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx)=> Cart(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) =>Orders(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) =>AuthProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Shop',
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.grey[250],
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: Colors.blueGrey,
-                secondary: Colors.deepOrangeAccent,
-              ),
-          fontFamily: 'Lato',
-        ),
-        routes: {
-          '/': (ctx) => const AuthScreen(),
-          ProductDetailsScreen.routeName: (ctx) => const ProductDetailsScreen(),
-          CartScreen.routeName: (ctx) => const CartScreen(),
-          OrdersScreen.routeName: (ctx) => const OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (ctx) => AuthProvider(),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+            create: (ctx) => ProductsProvider(),
+            update: (ctx, authProvider, previousProducts) =>
+                ProductsProvider()..updateProvider(authProvider),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => Cart(),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, Orders>(
+            create: (ctx) => Orders(),
+            update: (ctx, authProvider, previousOrders) =>
+            Orders()..updateToken(authProvider),
+          ),
+
+        ],
+        child: Consumer<AuthProvider>(
+          builder: (ctx, auth, _) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Shop',
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.grey[250],
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                    primary: Colors.blueGrey,
+                    secondary: Colors.deepOrangeAccent,
+                  ),
+              fontFamily: 'Lato',
+            ),
+            home: auth.isAuth ? HomeScreen() : const AuthScreen(),
+            routes: {
+              //'/': (ctx) => const AuthScreen(),
+              ProductDetailsScreen.routeName: (ctx) =>
+                  const ProductDetailsScreen(),
+              CartScreen.routeName: (ctx) => const CartScreen(),
+              OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+              UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
+              EditProductScreen.routeName: (ctx) => EditProductScreen(),
+            },
+          ),
+        ));
   }
 }

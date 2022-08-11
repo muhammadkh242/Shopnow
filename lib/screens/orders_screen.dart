@@ -11,7 +11,6 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Orders"),
@@ -48,13 +47,3 @@ class OrdersScreen extends StatelessWidget {
     );
   }
 }
-
-/*Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: ListView.builder(
-          itemCount: ordersProvider.orders.length,
-          itemBuilder: (ctx, i) => OrderRowItem(
-            orderItem: ordersProvider.orders[i],
-          ),
-        ),
-      ),*/

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:shop/providers/auth.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,17 +21,22 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  AuthProvider? _authProvider;
+
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
     return [..._orders];
   }
-
+  void updateToken(AuthProvider authProvider){
+    _authProvider = authProvider;
+  }
   Future addOrder({
     required List<CartItem> cartProducts,
     required double amount,
   }) async {
-    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json";
+    final url =
+        "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     await http
         .post(
@@ -59,16 +67,16 @@ class Orders with ChangeNotifier {
         );
         notifyListeners();
       } else {
-        throw Future.error;
+        throw const HttpException("can't add order");
       }
     }).catchError((error) {
-      throw Future.error;
+      throw error;
     });
   }
 
   Future fetchOrders() async {
     _orders.clear();
-    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json";
+    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -92,6 +100,7 @@ class Orders with ChangeNotifier {
         ),
       );
     });
+    print(orders.length);
     _orders.reversed;
     notifyListeners();
   }

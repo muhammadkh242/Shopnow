@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/providers/auth.dart';
 import 'product.dart';
 import 'dart:convert';
 
 class ProductsProvider with ChangeNotifier {
+  //final String? token;
+
+  AuthProvider? _authProvider;
+
+  void updateProvider(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
   final List<Product> _items = [];
-  static const url =
-      "https://shop-b55ab-default-rtdb.firebaseio.com/products.json";
 
   List<Product> get items {
     return _items;
@@ -28,6 +35,8 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future addProduct(Product product) async {
+    final url =
+        "https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     await http
         .post(
@@ -37,7 +46,6 @@ class ProductsProvider with ChangeNotifier {
         'description': product.description,
         'price': product.price,
         'imageUrl': product.imageUrl,
-        'isFavorite': product.isFavorite,
       }),
     )
         .then((response) {
@@ -57,10 +65,16 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future fetchProducts() async {
+    final url =
+        "https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}";
     _items.clear();
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final favUrl =
+        "https://shop-b55ab-default-rtdb.firebaseio.com/userFavorites/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
+    final favResponse = await http.get(Uri.parse(favUrl));
+    Map<String, dynamic> favData = json.decode(favResponse.body);
 
     jsonResponse.forEach((productID, product) {
       _items.add(
@@ -70,6 +84,7 @@ class ProductsProvider with ChangeNotifier {
           description: product['description'],
           price: product['price'],
           imageUrl: product['imageUrl'],
+          isFavorite: favData == null ? false : favData[productID] ?? false ,
         ),
       );
     });
@@ -78,14 +93,14 @@ class ProductsProvider with ChangeNotifier {
 
   Future removeProduct(String id) async {
     final url =
-        'https://shop-b55ab-default-rtdb.firebaseio.com/products/$id.json';
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products/$id.json?auth=${_authProvider!.token}';
     var uri = Uri.parse(url);
 
     await http.delete(uri).then((response) {
       if (response.statusCode == 200) {
         _items.removeWhere((product) => product.id == id);
         notifyListeners();
-      }else{
+      } else {
         throw Future.error;
       }
     }).catchError((error) {
@@ -98,7 +113,7 @@ class ProductsProvider with ChangeNotifier {
         .indexWhere((currentProduct) => currentProduct.id == updatedProduct.id);
 
     final url =
-        'https://shop-b55ab-default-rtdb.firebaseio.com/products/${updatedProduct.id}.json';
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products/${updatedProduct.id}.json?auth=${_authProvider!.token}';
 
     var uri = Uri.parse(url);
     await http

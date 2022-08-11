@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'auth.dart';
+
 class CartItem {
   final String id;
   final String title;
@@ -15,6 +17,7 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
+
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {

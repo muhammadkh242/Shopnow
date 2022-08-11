@@ -5,6 +5,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
+  String? _token;
+  DateTime? _expiryDate;
+  String? _userID;
+
+  bool get isAuth {
+    return token != null;
+  }
+  String get userId{
+      return _userID!;
+  }
+  String? get token {
+    if (_token != null &&
+        _expiryDate != null &&
+        _expiryDate!.isAfter(DateTime.now())) {
+      return _token;
+    }
+    return null;
+  }
+
   Future _authenticate(String email, String password, String urlSegment) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/$urlSegment?key=AIzaSyDa0wMGJ_NIUkIwKezZpnUdDz7-2APNN0o';
@@ -21,6 +40,16 @@ class AuthProvider with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+      _token = responseData['idToken'];
+      _userID = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
+        ),
+      );
+      notifyListeners();
     }).catchError((error) {
       throw error;
     });

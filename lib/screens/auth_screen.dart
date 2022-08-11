@@ -21,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   var _isLoading = false;
 
+
   void _switchAuthMode() {
     if (authMode == AuthMode.Login) {
       setState(() {
