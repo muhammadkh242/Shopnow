@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/providers/auth.dart';
 
 enum AuthMode { SignUp, Login }
 
@@ -11,6 +13,9 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var authMode = AuthMode.Login;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmController = TextEditingController();
 
   void _switchAuthMode() {
     if (authMode == AuthMode.Login) {
@@ -60,6 +65,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             prefixIcon: Icon(Icons.email)),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
+                        controller: emailController,
                       ),
                       const SizedBox(
                         height: 20,
@@ -75,6 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         textInputAction: authMode == AuthMode.Login
                             ? TextInputAction.done
                             : TextInputAction.next,
+                        controller: passwordController,
                       ),
                       const SizedBox(
                         height: 20,
@@ -96,10 +103,24 @@ class _AuthScreenState extends State<AuthScreen> {
                       SizedBox(
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
+                          onPressed: () {
+                            if (authMode == AuthMode.SignUp) {
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .signUp(
+                                emailController.text,
+                                passwordController.text,
+                              );
+                            } else {
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .login(
+                                emailController.text,
+                                passwordController.text,
+                              );
+                            }
+                          },
+                          child: Text(
+                            authMode == AuthMode.Login ? "Login" : "Signup",
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
