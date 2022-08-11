@@ -5,8 +5,6 @@ import 'product.dart';
 import 'dart:convert';
 
 class ProductsProvider with ChangeNotifier {
-  //final String? token;
-
   AuthProvider? _authProvider;
 
   void updateProvider(AuthProvider authProvider) {
