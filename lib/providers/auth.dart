@@ -76,11 +76,14 @@ class AuthProvider with ChangeNotifier {
   Future login(String email, String password) async =>
       _authenticate(email, password, "accounts:signInWithPassword");
 
-  void logout() {
+  void logout() async{
     _token = null;
     _userID = null;
     _expiryDate = null;
+    print(isAuth);
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _autoLogout() {
