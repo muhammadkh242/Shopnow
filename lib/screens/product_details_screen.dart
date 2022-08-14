@@ -14,11 +14,55 @@ class ProductDetailsScreen extends StatelessWidget {
       listen: false,
     ).findProductById(productId);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedProduct.title),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(loadedProduct.title),
+              background: Hero(
+                tag: productId,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  loadedProduct.description,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "\$ ${loadedProduct.price.toString()}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 800,),
+              ],
+            ),
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
+    );
+  }
+}
+/*Column(
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
@@ -54,8 +98,4 @@ class ProductDetailsScreen extends StatelessWidget {
 
 
           ],
-        ),
-      ),
-    );
-  }
-}
+        )*/

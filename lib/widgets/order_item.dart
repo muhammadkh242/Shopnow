@@ -19,44 +19,50 @@ class _OrderRowItemState extends State<OrderRowItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Card(
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
-                "\$ ${widget.orderItem.amount.toString()}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height:
+          _expanded ? min(widget.orderItem.products.length *20.0 + 110.0, 200) : 95,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Card(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  "\$ ${widget.orderItem.amount.toString()}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                subtitle: Text(
+                  DateFormat.yMMMd().format(widget.orderItem.dateTime),
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.expand_more),
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
                 ),
               ),
-              subtitle: Text(
-                DateFormat.yMMMd().format(widget.orderItem.dateTime),
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              trailing: IconButton(
-                icon: const Icon(Icons.expand_more),
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
-              ),
-            ),
-            if (_expanded)
-              Container(
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
                 padding: const EdgeInsets.all(10.0),
-                height: min(widget.orderItem.products.length *50.0, 100),
+                height: _expanded
+                    ? min(widget.orderItem.products.length * 50.0, 100)
+                    : 0,
                 child: ListView(
                   children: widget.orderItem.products
                       .map(
                         (product) => Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 5.0,
+                            vertical: 5.0,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +87,8 @@ class _OrderRowItemState extends State<OrderRowItem> {
                       .toList(),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
