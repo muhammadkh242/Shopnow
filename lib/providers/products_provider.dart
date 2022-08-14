@@ -44,6 +44,7 @@ class ProductsProvider with ChangeNotifier {
         'description': product.description,
         'price': product.price,
         'imageUrl': product.imageUrl,
+        'creatorId' : _authProvider!.userId,
       }),
     )
         .then((response) {
@@ -62,16 +63,19 @@ class ProductsProvider with ChangeNotifier {
     return Future.value;
   }
 
-  Future fetchProducts() async {
-    final url =
-        "https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}";
+  Future fetchProducts([bool filterByUser = false]) async {
+    final filterString = filterByUser ? 'orderBy="creatorId"' : '';
+    var url =
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}';
     _items.clear();
     var uri = Uri.parse(url);
     final response = await http.get(uri);
+    print(response.statusCode);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
     final favUrl =
         "https://shop-b55ab-default-rtdb.firebaseio.com/userFavorites/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
     final favResponse = await http.get(Uri.parse(favUrl));
+
     Map<String, dynamic> favData = json.decode(favResponse.body);
 
     jsonResponse.forEach((productID, product) {
@@ -86,6 +90,7 @@ class ProductsProvider with ChangeNotifier {
         ),
       );
     });
+    print(_items.length);
     notifyListeners();
   }
 

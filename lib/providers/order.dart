@@ -36,7 +36,7 @@ class Orders with ChangeNotifier {
     required double amount,
   }) async {
     final url =
-        "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json?auth=${_authProvider!.token}";
+        "https://shop-b55ab-default-rtdb.firebaseio.com/orders/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     await http
         .post(
@@ -76,7 +76,7 @@ class Orders with ChangeNotifier {
 
   Future fetchOrders() async {
     _orders.clear();
-    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders.json?auth=${_authProvider!.token}";
+    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
