@@ -12,9 +12,11 @@ class AuthProvider with ChangeNotifier {
   bool get isAuth {
     return token != null;
   }
-  String get userId{
-      return _userID!;
+
+  String get userId {
+    return _userID!;
   }
+
   String? get token {
     if (_token != null &&
         _expiryDate != null &&
@@ -60,4 +62,11 @@ class AuthProvider with ChangeNotifier {
 
   Future login(String email, String password) async =>
       _authenticate(email, password, "accounts:signInWithPassword");
+
+  void logout() {
+    _token = null;
+    _userID = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
 }
