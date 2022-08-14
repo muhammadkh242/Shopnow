@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class AuthProvider with ChangeNotifier {
         {'email': email, 'password': password, 'returnSecureToken': true},
       ),
     )
-        .then((response) {
+        .then((response) async {
       Map<String, dynamic> responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
@@ -55,6 +56,15 @@ class AuthProvider with ChangeNotifier {
       );
       _autoLogout();
       notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode(
+        {
+          'token': _token,
+          'userId': _userID,
+          'expiryDate': _expiryDate!.toIso8601String(),
+        },
+      );
+      prefs.setString('userData', userData);
     }).catchError((error) {
       throw error;
     });
@@ -73,11 +83,31 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _autoLogout(){
-    if(_authTimer != null){
+  void _autoLogout() {
+    if (_authTimer != null) {
       _authTimer!.cancel();
     }
     final timeToExpiry = _expiryDate!.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey('userData')){
+      return false;
+    }
+    final extractedUserData = json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
+    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+    if (expiryDate.isBefore(DateTime.now())) {
+      return false;
+    }
+
+    _token = extractedUserData['token'];
+    _userID = extractedUserData['userId'];
+    _expiryDate = expiryDate;
+    notifyListeners();
+    _autoLogout();
+    return true;
+
   }
 }

@@ -10,6 +10,7 @@ import 'package:shop/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/screens/orders_screen.dart';
 import 'package:shop/screens/product_details_screen.dart';
+import 'package:shop/screens/splash_screen.dart';
 import 'package:shop/screens/user_products_screen.dart';
 import 'package:shop/widgets/user_procuct_item.dart';
 
@@ -39,9 +40,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<AuthProvider, Orders>(
             create: (ctx) => Orders(),
             update: (ctx, authProvider, previousOrders) =>
-            Orders()..updateToken(authProvider),
+                Orders()..updateToken(authProvider),
           ),
-
         ],
         child: Consumer<AuthProvider>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -55,7 +55,15 @@ class MyApp extends StatelessWidget {
                   ),
               fontFamily: 'Lato',
             ),
-            home: auth.isAuth ? HomeScreen() : const AuthScreen(),
+            home: auth.isAuth
+                ? HomeScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authSnapShot) =>
+                        authSnapShot.connectionState == ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen(),
+                  ),
             routes: {
               //'/': (ctx) => const AuthScreen(),
               ProductDetailsScreen.routeName: (ctx) =>
