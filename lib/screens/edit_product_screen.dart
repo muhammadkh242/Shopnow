@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:shop/providers/auth.dart';
@@ -149,9 +150,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
       //Navigator.of(context).pop();
     }
   }
+  Uint8List _getByteImg() => const Base64Decoder().convert(currentImage, 22);
 
   @override
   Widget build(BuildContext context) {
+
     print(_isLoading);
     return Scaffold(
         appBar: AppBar(
@@ -191,26 +194,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         onTap: () {
                           _pickImg();
                         },
-                        child: _isUpdate
-                            ? Image(
-                                image: _productImg != null
-                                    ? FileImage(_productImg!)
-                                    : NetworkImage(currentImage)
-                                        as ImageProvider,
-                                fit: BoxFit.cover,
-                              )
-                            : _productImg == null
-                                ? const Center(
-                                    child: Text(
-                                      "Add image",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                        child: _productImg == null
+                            ? _isUpdate
+                                ? Image.memory(
+                                    _getByteImg(),
+                                    fit: BoxFit.cover,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    width: double.infinity,
                                   )
-                                : Image(
-                                    image: FileImage(_productImg!),
-                                  ),
+                                : const Center(child: Text("Add Image"))
+                            : Image.file(
+                                _productImg!,
+                                fit: BoxFit.cover,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25,
+                                width: double.infinity,
+                              ),
                       ),
                     ),
                   ),
@@ -294,3 +294,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
         ));
   }
 }
+/*                      ? Image(
+                                image: _productImg != null
+                                    ? FileImage(_productImg!)
+                                    : Image.memory(
+                                        byteImg,
+                                        fit: BoxFit.cover,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.25,
+                                        width: double.infinity,
+                                      ) as ImageProvider,
+                                fit: BoxFit.cover,
+                              )
+                            : _productImg == null
+                                ? const Center(
+                                    child: Text(
+                                      "Add image",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : Image(
+                                    image: FileImage(_productImg!),
+                                  ),*/

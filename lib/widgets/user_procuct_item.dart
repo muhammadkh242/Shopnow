@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/products_provider.dart';
@@ -13,6 +16,8 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Uint8List byteImg = const Base64Decoder().convert(imageUrl, 22);
+
     return Card(
       elevation: 3.0,
       margin: const EdgeInsets.all(14.0),
@@ -27,11 +32,11 @@ class UserProductItem extends StatelessWidget {
                   topLeft: Radius.circular(15.0),
                   topRight: Radius.circular(15.0),
                 ),
-                child: Image(
-                  image: NetworkImage(imageUrl),
+                child: Image.memory(
+                  byteImg,
+                  fit: BoxFit.cover,
                   height: MediaQuery.of(context).size.height * 0.25,
                   width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
               ),
               Positioned(

@@ -29,10 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future _refreshItems(BuildContext context) async {
-    await Provider.of<ProductsProvider>(context, listen: false).fetchProducts()
-    .catchError((HttpException err){
-      print(err.message);
-    });
+    await Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
   }
 
   @override
@@ -108,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => RefreshIndicator(
           onRefresh: () => _refreshItems(context),
           child: GridView.builder(
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(10.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

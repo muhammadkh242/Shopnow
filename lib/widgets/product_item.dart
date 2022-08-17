@@ -90,11 +90,3 @@ class ProductItem extends StatelessWidget {
     );
   }
 }
-/*Image.memory(byteImg)*/
-/*FadeInImage(
-              image: Image.memory(byteImg) as ImageProvider,
-              placeholder: const AssetImage(
-                "assets/images/placeholder.png",
-              ),
-              fit: BoxFit.cover,
-            ),*/

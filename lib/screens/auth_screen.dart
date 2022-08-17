@@ -136,7 +136,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 Center(
                   child: Card(
                     margin: const EdgeInsets.all(8.0),
-                    color: Colors.white,
+                    color: Colors.white70,
                     child: SizedBox(
                       height: authMode == AuthMode.Login
                           ? MediaQuery.of(context).size.height * 0.35

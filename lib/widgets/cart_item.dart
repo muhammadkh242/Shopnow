@@ -66,17 +66,24 @@ class CartRowItem extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
+            radius: 35,
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: FittedBox(
                 child: Text(
-                  price.toString(),
+                  "\$${price.toString()}",
                 ),
               ),
             ),
           ),
-          title: Text(title),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           subtitle: Text(
             'Total: \$${(price * quantity)}',
           ),
