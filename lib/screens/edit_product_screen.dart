@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:shop/providers/auth.dart';
 import 'package:shop/providers/product.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/products_provider.dart';
 import 'package:shop/screens/user_products_screen.dart';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:convert';
 
 class EditProductScreen extends StatefulWidget {
   EditProductScreen({Key? key}) : super(key: key);
@@ -15,7 +21,7 @@ class EditProductScreen extends StatefulWidget {
 
 class _EditProductScreenState extends State<EditProductScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  File? _productImg;
   final shoeImage =
       "https://st-adidas-egy.mncdn.com/content/images/thumbs/0117567_grand-court-shoes_ef0103_side-lateral-center-view.jpeg";
 
@@ -31,17 +37,29 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _isUpdate = false;
   var _isLoading = false;
   var _isInit = true;
+
+  void _pickImg() async {
+    final picker = ImagePicker();
+    final pickedImageXFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    final pickedImageFile = File(pickedImageXFile!.path);
+    setState(() {
+      _productImg = pickedImageFile;
+    });
+  }
+
   @override
   void didChangeDependencies() {
-    if(_isInit){
+    if (_isInit) {
       final arg = ModalRoute.of(context)?.settings.arguments as String;
       if (arg != UserProductsScreen.routeName) {
         _isUpdate = true;
       }
       if (_isUpdate) {
         final currentProduct =
-        Provider.of<ProductsProvider>(context, listen: false)
-            .findProductById(arg);
+            Provider.of<ProductsProvider>(context, listen: false)
+                .findProductById(arg);
         titleController.text = currentProduct.title;
         priceController.text = currentProduct.price.toString();
         descriptionController.text = currentProduct.description;
@@ -60,22 +78,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _saveProductInfo(BuildContext context) {
+  void _saveProductInfo(BuildContext context) async {
+    final productsProvider =
+        Provider.of<ProductsProvider>(context, listen: false);
     setState(() {
       _isLoading = true;
     });
+
     if (_formKey.currentState!.validate()) {
       final additionalProduct = Product(
         id: DateTime.now().toString(),
         title: titleController.text,
         description: descriptionController.text,
         price: double.parse(priceController.text),
-        imageUrl: shoeImage,
+        imageUrl:
+            'data:image/jpg;base64,${base64Encode(_productImg!.readAsBytesSync())}',
       );
 
-      Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(additionalProduct)
-          .then(
+      productsProvider.addProduct(additionalProduct, _productImg!).then(
         (value) {
           setState(() {
             _isLoading = false;
@@ -91,7 +111,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         );
       });
-      //Navigator.of(context).pop();
     }
   }
 
@@ -105,7 +124,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
         title: titleController.text,
         description: descriptionController.text,
         price: double.parse(priceController.text),
-        imageUrl: currentImage,
+        imageUrl: _productImg == null
+            ? currentImage
+            : 'data:image/jpg;base64,${base64Encode(_productImg!.readAsBytesSync())}',
       );
 
       Provider.of<ProductsProvider>(context, listen: false)
@@ -119,7 +140,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Update Failed, check your connection and try again!"),
+            content:
+                Text("Update Failed, check your connection and try again!"),
             duration: Duration(seconds: 3),
           ),
         );
@@ -162,9 +184,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-                    child: Image(
-                      image: NetworkImage(_isUpdate ? currentImage : shoeImage),
-                      fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: InkWell(
+                        onTap: () {
+                          _pickImg();
+                        },
+                        child: _isUpdate
+                            ? Image(
+                                image: _productImg != null
+                                    ? FileImage(_productImg!)
+                                    : NetworkImage(currentImage)
+                                        as ImageProvider,
+                                fit: BoxFit.cover,
+                              )
+                            : _productImg == null
+                                ? const Center(
+                                    child: Text(
+                                      "Add image",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : Image(
+                                    image: FileImage(_productImg!),
+                                  ),
+                      ),
                     ),
                   ),
                 ),

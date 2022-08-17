@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:shop/providers/auth.dart';
 import 'package:shop/screens/product_details_screen.dart';
@@ -16,7 +19,8 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context, listen: false);
     final cartProvider = Provider.of<Cart>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
+    print(product.imageUrl);
+    Uint8List byteImg = const Base64Decoder().convert(product.imageUrl, 22);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: GridTile(
@@ -76,13 +80,8 @@ class ProductItem extends StatelessWidget {
           },
           child: Hero(
             tag: product.id,
-            child: FadeInImage(
-              image: NetworkImage(
-                product.imageUrl,
-              ),
-              placeholder: const AssetImage(
-                "assets/images/placeholder.png",
-              ),
+            child: Image.memory(
+              byteImg,
               fit: BoxFit.cover,
             ),
           ),
@@ -91,3 +90,11 @@ class ProductItem extends StatelessWidget {
     );
   }
 }
+/*Image.memory(byteImg)*/
+/*FadeInImage(
+              image: Image.memory(byteImg) as ImageProvider,
+              placeholder: const AssetImage(
+                "assets/images/placeholder.png",
+              ),
+              fit: BoxFit.cover,
+            ),*/

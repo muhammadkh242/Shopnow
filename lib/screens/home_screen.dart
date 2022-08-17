@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shop/providers/cart.dart';
 import 'package:shop/providers/products_provider.dart';
@@ -26,8 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  Future _refreshItems(BuildContext context) async{
-    await Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+  Future _refreshItems(BuildContext context) async {
+    await Provider.of<ProductsProvider>(context, listen: false).fetchProducts()
+    .catchError((HttpException err){
+      print(err.message);
+    });
   }
 
   @override
@@ -59,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text("Show All"),
               )
             ],
-            icon: const Icon(Icons.filter_list_outlined,size: 31,),
+            icon: const Icon(
+              Icons.filter_list_outlined,
+              size: 31,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -98,15 +106,16 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ConditionalBuilder(
         condition: productsProvider.items.isNotEmpty,
         builder: (context) => RefreshIndicator(
-          onRefresh: () => _refreshItems(context) ,
+          onRefresh: () => _refreshItems(context),
           child: GridView.builder(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(10.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 3 / 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 20,
+            ),
             itemBuilder: (ctx, i) {
               return ChangeNotifierProvider.value(
                 value: productList[i],
