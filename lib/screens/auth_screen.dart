@@ -21,7 +21,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   var _isLoading = false;
 
-
   void _switchAuthMode() {
     if (authMode == AuthMode.Login) {
       setState(() {
@@ -35,7 +34,6 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _showSnackBar(String msg) {
-    print(msg);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
@@ -84,14 +82,15 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: Alignment.center,
         children: [
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-                  Colors.orangeAccent.withOpacity(0.4),
-                  Colors.white,
+                  Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                  Colors.white70,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -100,65 +99,51 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: SizedBox(
-                  height: 400,
-                  child: Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextFormField(
-                            decoration: const InputDecoration(
-                                labelText: "Email",
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.email)),
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            controller: emailController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please provide an email.";
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: "Password",
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.lock),
-                            ),
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: true,
-                            textInputAction: authMode == AuthMode.Login
-                                ? TextInputAction.done
-                                : TextInputAction.next,
-                            controller: passwordController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please provide a password.";
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          if (authMode == AuthMode.SignUp)
+                child: Card(
+                  margin: const EdgeInsets.all(8.0),
+                  color: Colors.white,
+                  child: SizedBox(
+                    height: authMode == AuthMode.Login
+                        ? MediaQuery.of(context).size.height * 0.35
+                        : MediaQuery.of(context).size.height * 0.45,
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
                             TextFormField(
                               decoration: const InputDecoration(
-                                labelText: "Confirm Password",
+                                labelText: "Email",
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.email),
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              controller: emailController,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Please provide an email.";
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: "Password",
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.lock),
                               ),
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
-                              textInputAction: TextInputAction.done,
+                              textInputAction: authMode == AuthMode.Login
+                                  ? TextInputAction.done
+                                  : TextInputAction.next,
+                              controller: passwordController,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Please provide a password.";
@@ -166,52 +151,112 @@ class _AuthScreenState extends State<AuthScreen> {
                                 return null;
                               },
                             ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: _submit,
-                              child: Text(
-                                authMode == AuthMode.Login ? "Login" : "Signup",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                authMode == AuthMode.Login
-                                    ? "Don't have an account?"
-                                    : "Already have an account?",
-                                style: const TextStyle(
-                                  fontSize: 16,
+                            if (authMode == AuthMode.SignUp)
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  labelText: "Confirm Password",
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(Icons.lock),
                                 ),
+                                keyboardType: TextInputType.visiblePassword,
+                                obscureText: true,
+                                textInputAction: TextInputAction.done,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please provide a password.";
+                                  }
+                                  if (value != passwordController.text) {
+                                    return "Doesn't match your password";
+                                  }
+                                  return null;
+                                },
                               ),
-                              TextButton(
-                                onPressed: _switchAuthMode,
+                            if (authMode == AuthMode.SignUp)
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            SizedBox(
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: _submit,
                                 child: Text(
                                   authMode == AuthMode.Login
-                                      ? "Join now"
-                                      : "Login",
+                                      ? "Login"
+                                      : "Signup",
                                   style: const TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  authMode == AuthMode.Login
+                                      ? "Don't have an account?"
+                                      : "Already have an account?",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: _switchAuthMode,
+                                  child: Text(
+                                    authMode == AuthMode.Login
+                                        ? "Join now"
+                                        : "Login",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 110,
+            child: Container(
+              padding: const EdgeInsets.all(12.0),
+              decoration: const BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
+              child: Row(
+                children: const [
+                  Text(
+                    "ShopNow",
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  SizedBox(
+                    height: 55,
+                    width: 55,
+                    child: Image(
+                      image: AssetImage("assets/images/online-shop.png"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

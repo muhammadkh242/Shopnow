@@ -59,33 +59,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text("Show All"),
               )
             ],
-            icon: const Icon(Icons.filter_list_outlined),
+            icon: const Icon(Icons.filter_list_outlined,size: 31,),
           ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, CartScreen.routeName);
-                },
-                icon: const Icon(Icons.shopping_cart),
-              ),
-              CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                radius: 12,
-                child: Consumer<Cart>(
-                  builder: (ctx, cartProvider, _) {
-                    return Text(
-                      cartProvider.itemsCount.toString(),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                    );
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 3,
+              right: 3.0,
+            ),
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, CartScreen.routeName);
                   },
+                  icon: const Icon(Icons.shopping_cart),
                 ),
-              ),
-            ],
+                CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  radius: 12,
+                  child: Consumer<Cart>(
+                    builder: (ctx, cartProvider, _) {
+                      return Text(
+                        cartProvider.itemsCount.toString(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

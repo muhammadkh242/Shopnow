@@ -50,8 +50,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.grey[250],
               colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: Colors.blueGrey,
-                    secondary: Colors.deepOrangeAccent,
+                    primary: Colors.deepOrangeAccent,
+                    secondary: Colors.blue[300],
                   ),
               fontFamily: 'Lato',
             ),
