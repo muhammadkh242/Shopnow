@@ -22,9 +22,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var _isInit = true;
+
   @override
   void initState() {
-    Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+    if (_isInit) {
+      Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+      _isInit = false;
+    }
     super.initState();
   }
 

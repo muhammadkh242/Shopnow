@@ -12,12 +12,8 @@ import 'package:shop/screens/orders_screen.dart';
 import 'package:shop/screens/product_details_screen.dart';
 import 'package:shop/screens/splash_screen.dart';
 import 'package:shop/screens/user_products_screen.dart';
-import 'package:shop/widgets/user_procuct_item.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+import 'package:hexcolor/hexcolor.dart';
+void main(){
   runApp(const MyApp());
 }
 
@@ -53,7 +49,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.grey[250],
               colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: Colors.deepOrangeAccent,
+                    primary: HexColor('#8e4585'),
                     secondary: Colors.blue[300],
                   ),
               fontFamily: 'Lato',

@@ -7,7 +7,13 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Loading...'),
+        child: SizedBox(
+          height: 150,
+          width: 150,
+          child: Image(
+            image: AssetImage("assets/images/online-shop.png"),
+          ),
+        ),
       ),
     );
   }

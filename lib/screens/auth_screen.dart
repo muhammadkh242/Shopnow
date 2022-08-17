@@ -139,8 +139,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     color: Colors.white70,
                     child: SizedBox(
                       height: authMode == AuthMode.Login
-                          ? MediaQuery.of(context).size.height * 0.35
-                          : MediaQuery.of(context).size.height * 0.45,
+                          ? MediaQuery.of(context).size.height * 0.40
+                          : MediaQuery.of(context).size.height * 0.47,
                       child: Form(
                         key: _formKey,
                         child: Padding(

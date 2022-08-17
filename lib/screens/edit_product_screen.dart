@@ -9,7 +9,6 @@ import 'package:shop/providers/products_provider.dart';
 import 'package:shop/screens/user_products_screen.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:convert';
 
 class EditProductScreen extends StatefulWidget {
@@ -150,11 +149,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
       //Navigator.of(context).pop();
     }
   }
+
   Uint8List _getByteImg() => const Base64Decoder().convert(currentImage, 22);
 
   @override
   Widget build(BuildContext context) {
-
     print(_isLoading);
     return Scaffold(
         appBar: AppBar(
@@ -203,7 +202,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         0.25,
                                     width: double.infinity,
                                   )
-                                : const Center(child: Text("Add Image"))
+                                : Center(
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        _pickImg();
+                                      },
+                                      icon: const Icon(
+                                        Icons.add,
+                                        size: 40,
+                                      ),
+                                      label: const Text(
+                                        "Add image",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  )
                             : Image.file(
                                 _productImg!,
                                 fit: BoxFit.cover,
@@ -294,28 +307,3 @@ class _EditProductScreenState extends State<EditProductScreen> {
         ));
   }
 }
-/*                      ? Image(
-                                image: _productImg != null
-                                    ? FileImage(_productImg!)
-                                    : Image.memory(
-                                        byteImg,
-                                        fit: BoxFit.cover,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25,
-                                        width: double.infinity,
-                                      ) as ImageProvider,
-                                fit: BoxFit.cover,
-                              )
-                            : _productImg == null
-                                ? const Center(
-                                    child: Text(
-                                      "Add image",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                : Image(
-                                    image: FileImage(_productImg!),
-                                  ),*/

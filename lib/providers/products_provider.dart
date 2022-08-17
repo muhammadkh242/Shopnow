@@ -90,10 +90,7 @@ class ProductsProvider with ChangeNotifier {
     final favResponse = await http.get(Uri.parse(favUrl));
 
     Map<String, dynamic> favData = json.decode(favResponse.body);
-    if(jsonResponse == null || jsonResponse.isEmpty){
-      print("here fetching products");
-      return const HttpException("no products");
-    }
+
     jsonResponse.forEach((productID, product) {
       _items.add(
         Product(
