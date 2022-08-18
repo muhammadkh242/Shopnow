@@ -6,8 +6,6 @@ import 'package:shop/providers/auth.dart';
 import 'product.dart';
 import 'dart:convert';
 
-
-
 class ProductsProvider with ChangeNotifier {
   AuthProvider? _authProvider;
 
@@ -15,14 +13,31 @@ class ProductsProvider with ChangeNotifier {
     _authProvider = authProvider;
   }
 
-  final List<Product> _items = [];
+  List<Product> _items = [];
 
   List<Product> get items {
-    return _items;
+    return [..._items];
   }
 
   List<Product> get favItems {
-    return _items.where((product) => product.isFavorite).toList();
+/*    return _items.where(
+      (product) {
+        if(product.isFavorite){
+          print(" in fav get ${product.id}");
+        }
+        return product.isFavorite;
+      },
+
+    ).toList();*/
+/*    List<Product> favs = [];
+    _items.forEach((element) {
+      if(element.isFavorite){
+        favItems.add(element);
+      }
+    });
+    _items = favItems;
+    return _items;*/
+    return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
   Product findProductById(String id) {
@@ -38,8 +53,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future addProduct(Product product, File imgFile) async {
     final url =
-        "https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!
-        .token}";
+        "https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
 
     await http
@@ -49,7 +63,8 @@ class ProductsProvider with ChangeNotifier {
         'title': product.title,
         'description': product.description,
         'price': product.price,
-        'imageUrl': 'data:image/jpg;base64,${base64Encode(imgFile.readAsBytesSync())}',
+        'imageUrl':
+            'data:image/jpg;base64,${base64Encode(imgFile.readAsBytesSync())}',
         'creatorId': _authProvider!.userId,
       }),
     )
@@ -74,15 +89,13 @@ class ProductsProvider with ChangeNotifier {
         ? 'orderBy="creatorId"&equalTo="${_authProvider!.userId}"'
         : '';
     var url =
-        'https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!
-        .token}&$filterString';
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products.json?auth=${_authProvider!.token}&$filterString';
     _items.clear();
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
     final favUrl =
-        "https://shop-b55ab-default-rtdb.firebaseio.com/userFavorites/${_authProvider!
-        .userId}.json?auth=${_authProvider!.token}";
+        "https://shop-b55ab-default-rtdb.firebaseio.com/userFavorites/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
     final favResponse = await http.get(Uri.parse(favUrl));
 
     Map<String, dynamic> favData = json.decode(favResponse.body);
@@ -104,8 +117,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future removeProduct(String id) async {
     final url =
-        'https://shop-b55ab-default-rtdb.firebaseio.com/products/$id.json?auth=${_authProvider!
-        .token}';
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products/$id.json?auth=${_authProvider!.token}';
     var uri = Uri.parse(url);
 
     await http.delete(uri).then((response) {
@@ -125,19 +137,18 @@ class ProductsProvider with ChangeNotifier {
         .indexWhere((currentProduct) => currentProduct.id == updatedProduct.id);
 
     final url =
-        'https://shop-b55ab-default-rtdb.firebaseio.com/products/${updatedProduct
-        .id}.json?auth=${_authProvider!.token}';
+        'https://shop-b55ab-default-rtdb.firebaseio.com/products/${updatedProduct.id}.json?auth=${_authProvider!.token}';
 
     var uri = Uri.parse(url);
     await http
         .patch(uri,
-        body: json.encode({
-          'title': updatedProduct.title,
-          'description': updatedProduct.description,
-          'price': updatedProduct.price,
-          'imageUrl': updatedProduct.imageUrl,
-          'isFavorite': updatedProduct.isFavorite
-        }))
+            body: json.encode({
+              'title': updatedProduct.title,
+              'description': updatedProduct.description,
+              'price': updatedProduct.price,
+              'imageUrl': updatedProduct.imageUrl,
+              'isFavorite': updatedProduct.isFavorite
+            }))
         .then((response) {
       if (response.statusCode == 200) {
         _items[productIndex] = updatedProduct;

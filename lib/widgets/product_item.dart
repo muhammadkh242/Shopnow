@@ -33,6 +33,7 @@ class ProductItem extends StatelessWidget {
                     ? const Icon(Icons.favorite)
                     : const Icon(Icons.favorite_border_outlined),
                 onPressed: () {
+                  print(product.id);
                   provider.toggleFavorite(
                     authProvider.userId,
                     authProvider.token!,

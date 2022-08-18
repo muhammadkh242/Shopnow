@@ -25,69 +25,71 @@ class _OrderRowItemState extends State<OrderRowItem> {
           _expanded ? min(widget.orderItem.products.length *20.0 + 110.0, 200) : 95,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Card(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  "\$ ${widget.orderItem.amount.toString()}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+        child: SingleChildScrollView(
+          child: Card(
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    "\$ ${widget.orderItem.amount.toString()}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  subtitle: Text(
+                    DateFormat.yMMMd().format(widget.orderItem.dateTime),
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.expand_more),
+                    onPressed: () {
+                      setState(() {
+                        _expanded = !_expanded;
+                      });
+                    },
                   ),
                 ),
-                subtitle: Text(
-                  DateFormat.yMMMd().format(widget.orderItem.dateTime),
-                  style: const TextStyle(
-                    fontSize: 16,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  padding: const EdgeInsets.all(10.0),
+                  height: _expanded
+                      ? min(widget.orderItem.products.length * 50.0, 100)
+                      : 0,
+                  child: ListView(
+                    children: widget.orderItem.products
+                        .map(
+                          (product) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  product.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  '${product.quantity}x \$${product.price}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.expand_more),
-                  onPressed: () {
-                    setState(() {
-                      _expanded = !_expanded;
-                    });
-                  },
-                ),
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.all(10.0),
-                height: _expanded
-                    ? min(widget.orderItem.products.length * 50.0, 100)
-                    : 0,
-                child: ListView(
-                  children: widget.orderItem.products
-                      .map(
-                        (product) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5.0,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                product.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                '${product.quantity}x \$${product.price}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

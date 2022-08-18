@@ -20,6 +20,7 @@ class Product with ChangeNotifier {
   });
 
   Future toggleFavorite(String userId, String token) async {
+    print("id : $id");
     isFavorite = !isFavorite;
     notifyListeners();
     final url =

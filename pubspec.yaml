@@ -52,6 +52,14 @@ dev_dependencies:
   shared_preferences: ^2.0.15
   image_picker: ^0.8.5+3
   hexcolor: ^2.0.7
+  flutter_launcher_icons: ^0.10.0
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "dev_assets/shop.png"
+  adaptive_icon_background: "#191919"
+  adaptive_icon_forground: "dev_assets/shop.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

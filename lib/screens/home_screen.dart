@@ -45,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final productList = productsProvider.isFavorite
         ? productsProvider.favItems
         : productsProvider.items;
+    productList.forEach((element) {
+      print("element");
+      print(element.id);
+      print(element.isFavorite);
+    });
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(

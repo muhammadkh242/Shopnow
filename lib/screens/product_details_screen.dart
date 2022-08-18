@@ -16,6 +16,7 @@ class ProductDetailsScreen extends StatelessWidget {
       context,
       listen: false,
     ).findProductById(productId);
+    print(loadedProduct.id);
     Uint8List byteImg =
         const Base64Decoder().convert(loadedProduct.imageUrl, 22);
 
