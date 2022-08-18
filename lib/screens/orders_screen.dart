@@ -3,7 +3,6 @@ import 'package:shop/providers/order.dart';
 import 'package:shop/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/widgets/order_item.dart';
-import 'package:conditional_builder/conditional_builder.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -24,7 +23,7 @@ class OrdersScreen extends StatelessWidget {
           } else {
             if (dataSnapShot.error != null) {
               return const Center(
-                child: Text('Check Your connection and try again'),
+                child: Text('No Orders yet!!'),
               );
             } else {
               return Consumer<Orders>(
