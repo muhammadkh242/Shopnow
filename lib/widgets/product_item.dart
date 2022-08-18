@@ -19,7 +19,6 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context, listen: false);
     final cartProvider = Provider.of<Cart>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    print(product.imageUrl);
     Uint8List byteImg = const Base64Decoder().convert(product.imageUrl, 22);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),

@@ -1,13 +1,11 @@
 import 'dart:io';
-import 'package:path/path.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/providers/auth.dart';
 import 'product.dart';
 import 'dart:convert';
-import 'package:async/async.dart';
-import 'package:http_parser/http_parser.dart';
+
 
 
 class ProductsProvider with ChangeNotifier {
@@ -81,9 +79,7 @@ class ProductsProvider with ChangeNotifier {
     _items.clear();
     var uri = Uri.parse(url);
     final response = await http.get(uri);
-    print(response.statusCode);
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    print(jsonResponse);
     final favUrl =
         "https://shop-b55ab-default-rtdb.firebaseio.com/userFavorites/${_authProvider!
         .userId}.json?auth=${_authProvider!.token}";

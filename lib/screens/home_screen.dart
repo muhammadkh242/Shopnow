@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     if (_isInit) {
       Provider.of<ProductsProvider>(context, listen: false).fetchProducts();
+      Provider.of<Cart>(context, listen: false).fetchCart();
+
       _isInit = false;
     }
     super.initState();
@@ -46,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('MyShop'),
+        title: Text(productsProvider.isFavorite ? 'Favorites' :'Home'),
         actions: [
           PopupMenuButton(
             onSelected: (selectedValue) {

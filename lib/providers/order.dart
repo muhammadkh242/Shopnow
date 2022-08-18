@@ -75,9 +75,8 @@ class Orders with ChangeNotifier {
   }
 
   Future fetchOrders() async {
-    final filterString = 'orderBy="creatorId"&equalTo="${_authProvider!.userId}"';
     _orders.clear();
-    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders/${_authProvider!.userId}.json?auth=${_authProvider!.token}&$filterString";
+    final url = "https://shop-b55ab-default-rtdb.firebaseio.com/orders/${_authProvider!.userId}.json?auth=${_authProvider!.token}";
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> jsonResponse = json.decode(response.body);

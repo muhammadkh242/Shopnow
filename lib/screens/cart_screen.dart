@@ -90,9 +90,9 @@ class _OrderButtonState extends State<OrderButton> {
   Widget build(BuildContext context) {
     return _isLoading
         ? const Padding(
-          padding: EdgeInsets.all(10.0),
-          child: CircularProgressIndicator(),
-        )
+            padding: EdgeInsets.all(10.0),
+            child: CircularProgressIndicator(),
+          )
         : TextButton(
             onPressed: (widget.cartData.items.isEmpty || _isLoading)
                 ? null
