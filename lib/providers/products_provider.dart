@@ -20,23 +20,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<Product> get favItems {
-/*    return _items.where(
-      (product) {
-        if(product.isFavorite){
-          print(" in fav get ${product.id}");
-        }
-        return product.isFavorite;
-      },
 
-    ).toList();*/
-/*    List<Product> favs = [];
-    _items.forEach((element) {
-      if(element.isFavorite){
-        favItems.add(element);
-      }
-    });
-    _items = favItems;
-    return _items;*/
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 

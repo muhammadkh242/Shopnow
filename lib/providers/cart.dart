@@ -168,7 +168,9 @@ class Cart with ChangeNotifier {
     var uri = Uri.parse(url);
     final response = await http.get(uri);
     Map<String, dynamic> cartResponse = json.decode(response.body);
-
+    if(cartResponse == null){
+      return;
+    }
     cartResponse.forEach(
       (itemID, item) {
         item = CartItem(

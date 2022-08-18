@@ -85,6 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
         alignment: Alignment.center,
         children: [
           Container(
+            height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -97,170 +98,174 @@ class _AuthScreenState extends State<AuthScreen> {
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  margin: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12.0),
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Shopnow",
+                            style: TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          SizedBox(
+                            height: 55,
+                            width: 55,
+                            child: Image(
+                              image: AssetImage("assets/images/online-shop.png"),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Shopnow",
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 6,
-                      ),
-                      SizedBox(
-                        height: 55,
-                        width: 55,
-                        child: Image(
-                          image: AssetImage("assets/images/online-shop.png"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Card(
-                    margin: const EdgeInsets.all(8.0),
-                    color: Colors.white70,
-                    child: SizedBox(
-                      height: authMode == AuthMode.Login
-                          ? MediaQuery.of(context).size.height * 0.40
-                          : MediaQuery.of(context).size.height * 0.47,
-                      child: Form(
-                        key: _formKey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: "Email",
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.email),
-                                ),
-                                keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.next,
-                                controller: emailController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please provide an email.";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: "Password",
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.lock),
-                                ),
-                                keyboardType: TextInputType.visiblePassword,
-                                obscureText: true,
-                                textInputAction: authMode == AuthMode.Login
-                                    ? TextInputAction.done
-                                    : TextInputAction.next,
-                                controller: passwordController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please provide a password.";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              if (authMode == AuthMode.SignUp)
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    labelText: "Confirm Password",
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.lock),
-                                  ),
-                                  keyboardType: TextInputType.visiblePassword,
-                                  obscureText: true,
-                                  textInputAction: TextInputAction.done,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "Please provide a password.";
-                                    }
-                                    if (value != passwordController.text) {
-                                      return "Doesn't match your password";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              if (authMode == AuthMode.SignUp)
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              SizedBox(
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: _submit,
-                                  child: Text(
-                                    authMode == AuthMode.Login
-                                        ? "Login"
-                                        : "Signup",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                    Center(
+                      child: Card(
+                        margin: const EdgeInsets.all(8.0),
+                        color: Colors.white70,
+                        child: SizedBox(
+/*                      height: authMode == AuthMode.Login
+                              ? MediaQuery.of(context).size.height * 0.40
+                              : MediaQuery.of(context).size.height * 0.47,*/
+                          child: Form(
+                            key: _formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
-                                    authMode == AuthMode.Login
-                                        ? "Don't have an account?"
-                                        : "Already have an account?",
-                                    style: const TextStyle(
-                                      fontSize: 16,
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: "Email",
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.email),
                                     ),
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    controller: emailController,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "Please provide an email.";
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  TextButton(
-                                    onPressed: _switchAuthMode,
-                                    child: Text(
-                                      authMode == AuthMode.Login
-                                          ? "Join now"
-                                          : "Login",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: "Password",
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.lock),
+                                    ),
+                                    keyboardType: TextInputType.visiblePassword,
+                                    obscureText: true,
+                                    textInputAction: authMode == AuthMode.Login
+                                        ? TextInputAction.done
+                                        : TextInputAction.next,
+                                    controller: passwordController,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "Please provide a password.";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (authMode == AuthMode.SignUp)
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        labelText: "Confirm Password",
+                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(Icons.lock),
+                                      ),
+                                      keyboardType: TextInputType.visiblePassword,
+                                      obscureText: true,
+                                      textInputAction: TextInputAction.done,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return "Please provide a password.";
+                                        }
+                                        if (value != passwordController.text) {
+                                          return "Doesn't match your password";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  if (authMode == AuthMode.SignUp)
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                  SizedBox(
+                                    height: 50,
+                                    child: ElevatedButton(
+                                      onPressed: _submit,
+                                      child: Text(
+                                        authMode == AuthMode.Login
+                                            ? "Login"
+                                            : "Signup",
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        authMode == AuthMode.Login
+                                            ? "Don't have an account?"
+                                            : "Already have an account?",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: _switchAuthMode,
+                                        child: Text(
+                                          authMode == AuthMode.Login
+                                              ? "Join now"
+                                              : "Login",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
 

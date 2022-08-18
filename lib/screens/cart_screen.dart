@@ -14,6 +14,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartData = Provider.of<Cart>(context);
     final ordersData = Provider.of<Orders>(context);
+    print("build cart");
 
     return Scaffold(
       drawer: const AppDrawer(),

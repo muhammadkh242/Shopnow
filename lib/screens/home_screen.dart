@@ -41,10 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productsProvider = Provider.of<ProductsProvider>(context);
+    final productsProvider = Provider.of<ProductsProvider>(context);/*
     final productList = productsProvider.isFavorite
         ? productsProvider.favItems
-        : productsProvider.items;
+        : productsProvider.items;*/
+    final productList = productsProvider.favItems;
     productList.forEach((element) {
       print("element");
       print(element.id);
