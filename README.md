@@ -5,7 +5,7 @@ using : Firebase _ Provider for state management _ http for Api calls
 
 ## Screens
 
-<img src="https://user-images.githubusercontent.com/66799646/185425412-da8f6e96-c972-4a83-962d-9f189fe99cac.jpeg" height="640" width="288">
+<img src="https://user-images.githubusercontent.com/66799646/185427865-e6f3177b-c8e3-490a-8ad0-2aaae12110e3.jpeg" height="640" width="288">
 
 <img src="https://user-images.githubusercontent.com/66799646/185425304-ee2fcb8e-007a-44bb-a9fc-21b96c5f5e8a.jpeg" height="640" width="288">
 
