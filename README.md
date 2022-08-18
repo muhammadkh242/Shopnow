@@ -1,9 +1,13 @@
 # Shopnow
 Cross-platform mCommerce application built with Flutter.
-using : Firebase _ Provider for state management _ http for Api calls
+using : 
+_ Firebase 
+_ Provider for state management 
+_ http for Api calls
 
 
 ## Screens
+
 
 <img src="https://user-images.githubusercontent.com/66799646/185427865-e6f3177b-c8e3-490a-8ad0-2aaae12110e3.jpeg" height="640" width="288">
 
@@ -15,6 +19,7 @@ using : Firebase _ Provider for state management _ http for Api calls
 <img src="https://user-images.githubusercontent.com/66799646/185426981-f12dba37-32c6-4794-a5de-389da476498d.jpeg" height="640" width="288">
 
 <img src="https://user-images.githubusercontent.com/66799646/185428451-72154947-098e-4829-866e-970af7b5ea43.jpeg" height="640" width="288">
+<img src="https://user-images.githubusercontent.com/66799646/185428971-04161ee7-c8b9-40c6-8fe4-83ccc66e148b.jpeg" height="640" width="288">
 
 <img src="https://user-images.githubusercontent.com/66799646/185426988-246f44e6-6ad8-4ee7-a31a-14e9f90fa0b3.jpeg" height="640" width="288">
 <img src="https://user-images.githubusercontent.com/66799646/185426999-815a2dfa-3df2-4c6c-8bfa-04a42157281f.jpeg" height="640" width="288">
